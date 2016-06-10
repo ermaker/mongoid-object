@@ -1,21 +1,29 @@
 require 'mongoid'
 require 'ostruct'
 
-class Point < OpenStruct
+module Mongoid
+  module Object
+    class Dynamic
+      class Point < OpenStruct
+      end
+
+      class DummyClass
+        include Mongoid::Document
+        field :object, type: Mongoid::Object::Dynamic
+      end
+    end
+  end
 end
 
-class DummyObject
-  include Mongoid::Document
-  field :object, type: Mongoid::Object::Dynamic
-end
-
-RSpec.describe Mongoid::Object::Serializable do
-  describe DummyObject do
+RSpec.describe Mongoid::Object::Dynamic do
+  describe described_class::DummyClass do
     specify do
-      subject.object = { point: Point.new.tap { |p| p.x = 1 } }
+      subject.object =
+        { point: Mongoid::Object::Dynamic::Point.new.tap { |p| p.x = 1 } }
       subject.save
       expect(described_class.all.first.object).to be_a(Hash)
-      expect(described_class.all.first.object[:point]).to be_a(Point)
+      expect(described_class.all.first.object[:point]).to \
+        be_a(Mongoid::Object::Dynamic::Point)
       expect(described_class.all.first.object[:point].x).to eq(1)
     end
   end
