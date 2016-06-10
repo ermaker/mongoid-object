@@ -56,7 +56,7 @@ RSpec.describe Mongoid::Object::Document do
         end
 
         specify do
-          expect(described_class.each.map(&:value)).to eq([*0..9])
+          expect(described_class.map(&:value)).to eq([*0..9])
         end
 
         specify do
