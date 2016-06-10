@@ -2,13 +2,9 @@ module Mongoid
   module Object
     module Serializable
       def self.included(base)
-        base.const_set(
-          'Document',
-          Class.new do
-            include Mongoid::Document
-            include Mongoid::Attributes::Dynamic
-          end
-        )
+        base.const_set('Document', Class.new)
+        base::Document.include Mongoid::Document
+        base::Document.include Mongoid::Attributes::Dynamic
       end
     end
   end

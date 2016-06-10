@@ -12,7 +12,7 @@ RSpec.describe Mongoid::Object::Serializable do
       specify do
         expect(described_class).to include(Mongoid::Attributes::Dynamic)
       end
-      xspecify do
+      specify do
         subject.save
         expect(described_class.all.first.attributes).to eq(subject.attributes)
       end
