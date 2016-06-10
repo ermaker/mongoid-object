@@ -1,6 +1,6 @@
 module Mongoid
   module Object
-    module Serializable
+    module Document
       def self.included(base)
         base.const_set('Document', Class.new)
         base::Document.include Mongoid::Document

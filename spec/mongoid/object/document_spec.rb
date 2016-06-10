@@ -3,15 +3,15 @@ require 'ostruct'
 
 module Mongoid
   module Object
-    module Serializable
+    module Document
       class DummyClass < OpenStruct
-        include Mongoid::Object::Serializable
+        include Mongoid::Object::Document
       end
     end
   end
 end
 
-RSpec.describe Mongoid::Object::Serializable do
+RSpec.describe Mongoid::Object::Document do
   specify { expect(described_class::DummyClass).to include(described_class) }
 
   describe described_class::DummyClass do
@@ -45,20 +45,22 @@ RSpec.describe Mongoid::Object::Serializable do
         end
       end
 
-      specify do
-        expect do
-          described_class.consume {}
-        end.to change { described_class::Document.all.size }.by(-size)
-      end
+      describe '#consume' do
+        specify do
+          expect do
+            described_class.consume {}
+          end.to change { described_class::Document.all.size }.by(-size)
+        end
 
-      specify do
-        expect(described_class.consume.map(&:value)).to eq([*0..9])
-      end
+        specify do
+          expect(described_class.consume.map(&:value)).to eq([*0..9])
+        end
 
-      specify do
-        expect do
-          described_class.consume(&:save)
-        end.not_to change { described_class::Document.all.size }
+        specify do
+          expect do
+            described_class.consume(&:save)
+          end.not_to change { described_class::Document.all.size }
+        end
       end
     end
   end
