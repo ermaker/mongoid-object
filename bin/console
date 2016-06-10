@@ -12,5 +12,5 @@ Mongoid.logger.level = Logger::DEBUG
 Mongo::Logger.logger.level = Logger::DEBUG
 
 # (If you use this, don't forget to add pry to your Gemfile!)
-require "pry"
+require 'pry'
 Pry.start
