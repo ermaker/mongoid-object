@@ -1,0 +1,8 @@
+development:
+  clients:
+    default:
+      uri: 'mongodb://localhost:27017/mongoid-object_development'
+test:
+  clients:
+    default:
+      uri: 'mongodb://localhost:27017/mongoid-object_test'
