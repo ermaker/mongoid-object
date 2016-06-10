@@ -12,11 +12,14 @@ module Mongoid
 end
 
 RSpec.describe Mongoid::Object::Document do
-  specify { expect(described_class::DummyClass).to include(described_class) }
+  specify do
+    expect(described_class::DummyClass.included_modules).to \
+      include(described_class)
+  end
 
   describe described_class::DummyClass do
     describe described_class::Document do
-      specify { expect(described_class).to include(Mongoid::Document) }
+      specify { expect(described_class).to be_include(Mongoid::Document) }
     end
 
     describe 'with variables' do
@@ -45,7 +48,25 @@ RSpec.describe Mongoid::Object::Document do
         end
       end
 
-      describe '#consume' do
+      describe '.each' do
+        specify do
+          expect do
+            described_class.each {}
+          end.not_to change { described_class::Document.all.size }
+        end
+
+        specify do
+          expect(described_class.each.map(&:value)).to eq([*0..9])
+        end
+
+        specify do
+          expect do
+            described_class.each(&:save)
+          end.to change { described_class::Document.all.size }.by(size)
+        end
+      end
+
+      describe '.consume' do
         specify do
           expect do
             described_class.consume {}

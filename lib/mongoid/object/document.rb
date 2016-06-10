@@ -16,8 +16,15 @@ module Mongoid
       end
 
       module ClassMethods
+        include Enumerable
+
+        def each
+          return enum_for(__callee__) unless block_given?
+          self::Document.each { |document| yield document.object }
+        end
+
         def consume
-          return enum_for(:consume) unless block_given?
+          return enum_for(__callee__) unless block_given?
           self::Document.each do |document|
             yield document.object
             document.delete
