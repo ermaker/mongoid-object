@@ -21,10 +21,10 @@ RSpec.describe Mongoid::Object::Dynamic do
       subject.object =
         { point: Mongoid::Object::Dynamic::Point.new.tap { |p| p.x = 1 } }
       subject.save
-      expect(described_class.all.first.object).to be_a(Hash)
-      expect(described_class.all.first.object[:point]).to \
+      expect(described_class.first.object).to be_a(Hash)
+      expect(described_class.first.object[:point]).to \
         be_a(Mongoid::Object::Dynamic::Point)
-      expect(described_class.all.first.object[:point].x).to eq(1)
+      expect(described_class.first.object[:point].x).to eq(1)
     end
   end
 end
