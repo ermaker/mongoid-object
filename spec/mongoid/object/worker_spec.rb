@@ -45,5 +45,22 @@ RSpec.describe Mongoid::Object::Worker do
         described_class.each(&:tick)
       end
     end
+
+    describe 'with delete itself' do
+      subject do
+        described_class.new.tap do |subject|
+          subject.period = 10
+          subject.count = 1
+          subject.todo = :delete
+        end
+      end
+
+      specify do
+        expect { subject.save }.to \
+          change { described_class::Document.all.size }.by(1)
+        expect { described_class.each(&:tick) }.to \
+          change { described_class::Document.all.size }.by(-1)
+      end
+    end
   end
 end
