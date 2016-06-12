@@ -35,10 +35,7 @@ module Mongoid
 
         def consume
           return enum_for(__callee__) unless block_given?
-          self::Document.each do |document|
-            yield document.object
-            document.delete
-          end
+          each { |object| yield object.tap(&:mark_delete) }
         end
       end
     end
