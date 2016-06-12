@@ -20,10 +20,10 @@ module Mongoid
       end
 
       # :nocov:
-      def loop_tick
+      def self.loop_tick
         loop do
-          SLEEP 1
-          tick
+          sleep 1
+          each(&:tick)
         end
       end
       # :nocov:
