@@ -4,7 +4,7 @@ module Mongoid
       def self.included(base)
         base.const_set('Document', Class.new)
         base::Document.include Mongoid::Document
-        base::Document.field :object, type: Dynamic
+        base::Document.field :o, as: :object, type: Dynamic
 
         base.extend(ClassMethods)
       end
