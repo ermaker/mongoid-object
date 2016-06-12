@@ -5,6 +5,7 @@ module Mongoid
         subclass.include Mongoid::Object::Document
       end
 
+      # :reek:Attribute
       attr_accessor :period, :count, :todo
 
       def save_next(*next_todo)

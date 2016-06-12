@@ -1,6 +1,7 @@
 module Mongoid
   module Object
     module Document
+      # :reek:TooManyStatements
       def self.included(base) # rubocop:disable Metrics/MethodLength
         base.const_set(
           'Document', Class.new do
@@ -25,6 +26,7 @@ module Mongoid
         self.class::Document.new(object: self).save
       end
 
+      # :reek:Attribute
       attr_accessor :delete_symbol
 
       def delete
