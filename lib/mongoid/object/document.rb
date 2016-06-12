@@ -1,13 +1,13 @@
 module Mongoid
   module Object
     module Document
-      def self.included(base)
+      def self.included(base) # rubocop:disable Metrics/MethodLength
         base.const_set(
           'Document', Class.new do
             def yield_object
               catch do |delete_symbol|
                 self.object = object.tap do |obj|
-                  yield obj.tap{ |obj_| obj_.delete_symbol = delete_symbol }
+                  yield obj.tap { |obj_| obj_.delete_symbol = delete_symbol }
                 end
                 return save
               end
