@@ -10,7 +10,7 @@ module Mongoid
       end
 
       def save
-        self.class::Document.new.tap { |doc| doc.object = self }.save
+        self.class::Document.new(object: self).save
       end
 
       attr_reader :delete
