@@ -1,13 +1,14 @@
 module Mongoid
   module Object
     module Document
-      def self.included(base)
+      # :reek:TooManyStatements
+      def self.included(base) # rubocop:disable Metrics/MethodLength
         base.const_set(
           'Document', Class.new do
             def yield_object
               catch do |delete_symbol|
                 self.object = object.tap do |obj|
-                  yield obj.tap{ |obj_| obj_.delete_symbol = delete_symbol }
+                  yield obj.tap { |obj_| obj_.delete_symbol = delete_symbol }
                 end
                 return save
               end
@@ -25,6 +26,7 @@ module Mongoid
         self.class::Document.new(object: self).save
       end
 
+      # :reek:Attribute
       attr_accessor :delete_symbol
 
       def delete
