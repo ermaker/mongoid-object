@@ -2,7 +2,19 @@ module Mongoid
   module Object
     module Document
       def self.included(base)
-        base.const_set('Document', Class.new)
+        base.const_set(
+          'Document', Class.new do
+            def yield_object
+              catch do |delete_symbol|
+                self.object = object.tap do |obj|
+                  yield obj.tap{ |obj_| obj_.delete_symbol = delete_symbol }
+                end
+                return save
+              end
+              delete
+            end
+          end
+        )
         base::Document.include Mongoid::Document
         base::Document.field :o, as: :object, type: Dynamic
 
@@ -13,27 +25,26 @@ module Mongoid
         self.class::Document.new(object: self).save
       end
 
-      attr_reader :delete
+      attr_accessor :delete_symbol
 
-      def mark_delete
-        @delete = true
+      def delete
+        throw @delete_symbol
       end
 
       module ClassMethods
         include Enumerable
 
-        def each
+        def each(&block)
           return enum_for(__callee__) unless block_given?
-          self::Document.each do |document|
-            document.object = document.object.tap { |object| yield object }
-            next document.delete if document.object.delete
-            document.save
-          end
+          self::Document.each { |document| document.yield_object(&block) }
         end
 
         def consume
           return enum_for(__callee__) unless block_given?
-          each { |object| yield object.tap(&:mark_delete) }
+          each do |object|
+            yield object
+            object.delete
+          end
         end
       end
     end

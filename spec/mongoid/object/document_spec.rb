@@ -22,13 +22,6 @@ RSpec.describe Mongoid::Object::Document do
       specify { expect(described_class).to be_include(Mongoid::Document) }
     end
 
-    specify do
-      subject.mark_delete
-      expect(subject.delete).to be_truthy
-    end
-
-    specify { expect(subject.delete).to be_falsy }
-
     describe 'with variables' do
       before do
         subject.a = 1
@@ -74,7 +67,7 @@ RSpec.describe Mongoid::Object::Document do
 
         specify do
           expect do
-            described_class.each(&:mark_delete)
+            described_class.each(&:delete)
           end.to change { described_class::Document.all.size }.by(-size)
         end
 
