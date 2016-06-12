@@ -77,6 +77,11 @@ RSpec.describe Mongoid::Object::Document do
             described_class.each(&:mark_delete)
           end.to change { described_class::Document.all.size }.by(-size)
         end
+
+        specify do
+          described_class.each { |object| object.value *= 2 }
+          expect(described_class.map(&:value)).to eq([*0.step(18, 2)])
+        end
       end
 
       describe '.consume' do

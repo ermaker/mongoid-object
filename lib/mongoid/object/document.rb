@@ -29,7 +29,9 @@ module Mongoid
           self::Document.each do |document|
             object = document.object
             yield object
-            document.delete if object.delete
+            next document.delete if object.delete
+            document.object = object
+            document.save
           end
         end
 
