@@ -15,12 +15,22 @@ module Mongoid
         document.save
       end
 
+      attr_reader :delete
+
+      def mark_delete
+        @delete = true
+      end
+
       module ClassMethods
         include Enumerable
 
         def each
           return enum_for(__callee__) unless block_given?
-          self::Document.each { |document| yield document.object }
+          self::Document.each do |document|
+            object = document.object
+            yield object
+            document.delete if object.delete
+          end
         end
 
         def consume
