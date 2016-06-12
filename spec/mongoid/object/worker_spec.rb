@@ -4,6 +4,11 @@ module Mongoid
       class DummyWorker < Worker
         def something(*)
         end
+
+        def delete_and_something(*)
+          delete
+          this_statement_should_not_be_executed
+        end
       end
     end
   end
@@ -52,6 +57,23 @@ RSpec.describe Mongoid::Object::Worker do
           subject.period = 10
           subject.count = 1
           subject.todo = :delete
+        end
+      end
+
+      specify do
+        expect { subject.save }.to \
+          change { described_class::Document.all.size }.by(1)
+        expect { described_class.each(&:tick) }.to \
+          change { described_class::Document.all.size }.by(-1)
+      end
+    end
+
+    describe 'with delete' do
+      subject do
+        described_class.new.tap do |subject|
+          subject.period = 10
+          subject.count = 1
+          subject.todo = :delete_and_something
         end
       end
 
