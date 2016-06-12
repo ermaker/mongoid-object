@@ -27,10 +27,8 @@ module Mongoid
         def each
           return enum_for(__callee__) unless block_given?
           self::Document.each do |document|
-            object = document.object
-            yield object
-            next document.delete if object.delete
-            document.object = object
+            document.object = document.object.tap { |object| yield object }
+            next document.delete if document.object.delete
             document.save
           end
         end
