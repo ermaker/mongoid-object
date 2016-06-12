@@ -7,12 +7,13 @@ module Mongoid
 
         def delete_and_something(*)
           delete
+          # :nocov:
           this_statement_should_not_be_executed
+          # :nocov:
         end
 
-        def add_another_and_delete(*)
-          todo[1] += 1
-          save
+        def add_another_and_delete(arg)
+          save_next(__callee__, arg + 1)
           delete
         end
       end
